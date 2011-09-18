@@ -24,7 +24,7 @@ def get_filters():
     global _FILTER_CACHE
 
     if _FILTER_CACHE is None:
-        
+
         filters = []
         for filter_ in settings.FILTERS:
             if filter_.endswith('sentry.filters.SearchFilter'):
@@ -70,6 +70,13 @@ def construct_checksum(level=logging.ERROR, class_name='', traceback='', message
         checksum.update(message)
 
     return checksum.hexdigest()
+
+def str_local_vars(var):
+    if isinstance(var, dict):
+        ret = dict((k, repr(v)) for k, v in var.iteritems())
+    else:
+        ret = repr(var)
+    return ret
 
 def varmap(func, var, context=None):
     if context is None:
@@ -313,7 +320,7 @@ class MockDjangoRequest(HttpRequest):
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-    
+
     def __repr__(self):
         # Since this is called as part of error handling, we need to be very
         # robust against potentially malformed input.

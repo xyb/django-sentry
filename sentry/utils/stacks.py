@@ -4,7 +4,7 @@ import re
 from django.utils.html import escape
 
 from sentry.conf import settings
-from sentry.utils import get_installed_apps, transform
+from sentry.utils import get_installed_apps, str_local_vars
 
 def get_lines_from_file(filename, lineno, context_lines, loader=None, module_name=None):
     """
@@ -110,7 +110,7 @@ def get_stack_info(frames):
                 'function': function,
                 'lineno': lineno + 1,
                 # TODO: vars need to be references
-                'vars': transform(frame.f_locals.items()),
+                'vars': str_local_vars(frame.f_locals).items(),
                 'pre_context': pre_context,
                 'context_line': context_line,
                 'post_context': post_context,
