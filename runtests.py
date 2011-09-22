@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import logging
 import sys
+from os import environ
 from os.path import dirname, abspath, join
 from optparse import OptionParser
 
@@ -76,7 +77,11 @@ def runtests(*test_args, **kwargs):
         patch_for_test_db_setup()
 
     if not test_args:
-        test_args = ['tests']
+        # run: TEST_SUITE=tests.SentryTest.test_logger ./setup.py test
+        if 'TEST_SUITE' in environ:
+            test_args = environ.get('TEST_SUITE').split(':')
+        else:
+            test_args = ['tests']
 
     failures = run_tests(test_args,
         verbosity=kwargs.get('verbosity', 1),
